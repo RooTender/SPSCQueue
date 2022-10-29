@@ -101,6 +101,16 @@ public:
   SPSCQueue(const SPSCQueue &) = delete;
   SPSCQueue &operator=(const SPSCQueue &) = delete;
 
+  void* operator new(size_t i)
+  {
+    return _mm_malloc(i, 64);
+  }
+
+  void operator delete(void* p)
+  {
+    _mm_free(p);
+  }
+
   template <typename... Args>
   void emplace(Args &&...args) noexcept(
       std::is_nothrow_constructible<T, Args &&...>::value) {
